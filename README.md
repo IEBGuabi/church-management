@@ -37,7 +37,7 @@ src/
   presentation/      # rotas e handlers independentes do framework
 ```
 
-`HttpApplicationFactory.createApp` recebe a porta `HttpServerFactory`; assim, os casos de uso e as rotas não importam Fastify. `FastifyHttpServer` implementa essa porta e traduz erros do framework para `SystemError`, que é independente do adaptador. Outro framework pode substituir Fastify implementando a mesma interface.
+O fluxo HTTP segue `rota → controller → serviço`: o adaptador converte a requisição Fastify para `HttpRequest`, o controller pode validá-la ou transformá-la antes de chamar o serviço, e a resposta volta pelo contrato `HttpResponse`. `HttpApplicationFactory.createApp` recebe a porta `HttpServerFactory`; os controllers e casos de uso não importam Fastify. `FastifyHttpServer` implementa essa porta e traduz erros do framework para `SystemError`, que é independente do adaptador. Outro framework pode substituir Fastify implementando a mesma interface.
 
 O health check usa `HealthDependency`: cada integração fornece um adaptador próprio, e o serviço de aplicação agrega os resultados. Para adicionar um serviço monitorado, implemente essa interface e registre-o na inicialização.
 

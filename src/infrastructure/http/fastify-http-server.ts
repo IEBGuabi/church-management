@@ -1,5 +1,13 @@
 import Fastify, { FastifyInstance } from 'fastify';
-import { ApplicationCloseHandler, HttpRouteHandler, HttpServer, HttpServerFactory, HttpServerSettings } from '@/application/ports/http-server';
+import {
+  ApplicationCloseHandler,
+  HttpMethod,
+  HttpRequest,
+  HttpRouteHandler,
+  HttpServer,
+  HttpServerFactory,
+  HttpServerSettings,
+} from '@/application/ports/http-server';
 import { SystemErrorTranslator } from '@/infrastructure/http/system-error-translator';
 
 export class FastifyHttpServerFactory implements HttpServerFactory {
@@ -24,9 +32,15 @@ export class FastifyHttpServer implements HttpServer {
   }
 
   public registerGetRoute(path: string, handler: HttpRouteHandler): void {
-    this.server.get(path, async (_request, reply) => {
+    this.server.get(path, async (request, reply) => {
       try {
-        const response = await handler.handle();
+        const httpRequest: HttpRequest = {
+          method: HttpMethod.Get,
+          path: request.url,
+          headers: request.headers,
+          body: request.body,
+        };
+        const response = await handler.handle(httpRequest);
         return reply.code(response.statusCode).send(response.body);
       } catch (error) {
         throw this.errorTranslator.translate(error);

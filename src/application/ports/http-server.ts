@@ -3,8 +3,23 @@ export interface HttpResponse {
   readonly body: unknown;
 }
 
+export enum HttpMethod {
+  Get = 'GET',
+}
+
+export interface HttpHeaders {
+  readonly [headerName: string]: string | string[] | undefined;
+}
+
+export interface HttpRequest {
+  readonly method: HttpMethod;
+  readonly path: string;
+  readonly headers: HttpHeaders;
+  readonly body: unknown;
+}
+
 export interface HttpRouteHandler {
-  handle(): Promise<HttpResponse>;
+  handle(request: HttpRequest): Promise<HttpResponse>;
 }
 
 export interface HttpServerSettings {

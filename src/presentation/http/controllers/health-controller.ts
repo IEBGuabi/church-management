@@ -1,11 +1,16 @@
 import { HealthCheckService, HealthStatus } from '@/application/health/health-check';
-import { HttpResponse, HttpRouteHandler } from '@/application/ports/http-server';
+import {
+  HttpRequest,
+  HttpResponse,
+  HttpRouteHandler,
+} from '@/application/ports/http-server';
 
-export class HealthRoute implements HttpRouteHandler {
+export class HealthController implements HttpRouteHandler {
   public constructor(private readonly healthCheckService: HealthCheckService) {}
 
-  public async handle(): Promise<HttpResponse> {
+  public async handle(_request: HttpRequest): Promise<HttpResponse> {
     const report = await this.healthCheckService.check();
+
     return {
       statusCode: report.status === HealthStatus.Healthy ? 200 : 503,
       body: {
