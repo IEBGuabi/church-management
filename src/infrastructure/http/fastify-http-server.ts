@@ -8,6 +8,7 @@ import {
   HttpServerFactory,
   HttpServerSettings,
 } from '@/application/ports/http-server';
+import { HttpResponseFactory } from '@/application/ports/http-response-factory';
 import { SystemErrorTranslator } from '@/infrastructure/http/system-error-translator';
 
 export class FastifyHttpServerFactory implements HttpServerFactory {
@@ -24,10 +25,11 @@ export class FastifyHttpServer implements HttpServer {
     this.server.setErrorHandler((error, _request, reply) => {
       const systemError = this.errorTranslator.translate(error);
       this.reportError(systemError, 'request');
-      return reply.code(500).send({
+      const response = HttpResponseFactory.internalServerError({
         code: 'UNEXPECTED_SYSTEM_ERROR',
         message: 'An unexpected system error occurred',
       });
+      return reply.code(response.statusCode).send(response.body);
     });
   }
 
