@@ -30,11 +30,15 @@ Configure `DATABASE_URL`, `PORT`, `HOST`, `DB_POOL_MAX` e `NODE_ENV` no ambiente
 
 ```text
 src/
-  application/       # casos de uso
+  application/       # casos de uso e portas (interfaces)
   config/            # validação e configuração
-  domain/            # entidades e regras do domínio
-  infrastructure/    # banco e integrações externas
-  presentation/      # HTTP, rotas e handlers
+  domain/            # erros, entidades e regras do domínio
+  infrastructure/    # adaptadores de banco e framework HTTP
+  presentation/      # rotas e handlers independentes do framework
 ```
 
-Aliases TypeScript: `@/config/*`, `@/domain/*`, `@/application/*`, `@/infrastructure/*` e `@/presentation/*`.
+`HttpApplicationFactory.createApp` recebe a porta `HttpServerFactory`; assim, os casos de uso e as rotas não importam Fastify. `FastifyHttpServer` implementa essa porta e traduz erros do framework para `SystemError`, que é independente do adaptador. Outro framework pode substituir Fastify implementando a mesma interface.
+
+O health check usa `HealthDependency`: cada integração fornece um adaptador próprio, e o serviço de aplicação agrega os resultados. Para adicionar um serviço monitorado, implemente essa interface e registre-o na inicialização.
+
+Aliases TypeScript: `@/config/*`, `@/domain/*`, `@/application/*`, `@/infrastructure/*` e `@/presentation/*`. O build reescreve os aliases para que também funcionem no Node após a compilação.
