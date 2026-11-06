@@ -4,6 +4,7 @@ import {
   HttpResponse,
   HttpRouteHandler,
 } from '@/application/ports/http-server';
+import { HttpResponseFactory } from '@/application/ports/http-response-factory';
 
 export class HealthController implements HttpRouteHandler {
   public constructor(private readonly healthCheckService: HealthCheckService) {}
@@ -11,13 +12,14 @@ export class HealthController implements HttpRouteHandler {
   public async handle(_request: HttpRequest): Promise<HttpResponse> {
     const report = await this.healthCheckService.check();
 
-    return {
-      statusCode: report.status === HealthStatus.Healthy ? 200 : 503,
-      body: {
-        status: report.status,
-        timestamp: report.timestamp,
-        checks: report.dependencies,
-      },
+    const body = {
+      status: report.status,
+      timestamp: report.timestamp,
+      checks: report.dependencies,
     };
+
+    return report.status === HealthStatus.Healthy
+      ? HttpResponseFactory.ok(body)
+      : HttpResponseFactory.serviceUnavailable(body);
   }
 }
