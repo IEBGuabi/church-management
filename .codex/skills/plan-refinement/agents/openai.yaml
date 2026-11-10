@@ -1,0 +1,4 @@
+interface:
+  display_name: "Planejar tarefas do refinamento"
+  short_description: "Divide o refinamento em entregas pequenas e revisáveis"
+  default_prompt: "Use $plan-refinement para transformar este refinamento técnico em tarefas pequenas e revisáveis: "
