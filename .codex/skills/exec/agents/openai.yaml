@@ -1,0 +1,4 @@
+interface:
+  display_name: "Executar tarefa planejada"
+  short_description: "Implementa uma tarefa e atualiza seu status no plano"
+  default_prompt: "Use $exec para executar esta tarefa do plano: "
