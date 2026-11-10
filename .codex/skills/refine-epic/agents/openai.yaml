@@ -1,0 +1,4 @@
+interface:
+  display_name: "Refinar épico tecnicamente"
+  short_description: "Define arquitetura e plano de implementação para um épico"
+  default_prompt: "Use $refine-epic para refinar tecnicamente este épico: "

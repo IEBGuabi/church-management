@@ -1,0 +1,4 @@
+interface:
+  display_name: "Criar épico"
+  short_description: "Estrutura uma ideia e avalia a prontidão do épico"
+  default_prompt: "Use $create-epic para transformar esta ideia em um épico de produto, registrar perguntas abertas e avaliar se está pronto para refinamento técnico: "
